@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 9000;
 
 let app = express();
 
+app.use( '/bundle.js', express.static('build/bundle.js') );
 app.use( '/css', express.static('public/css') );
 app.use( '/img', express.static('public/img') );
 
