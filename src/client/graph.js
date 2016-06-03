@@ -24,6 +24,7 @@ export default function(element) {
 
   var yAxis = d3.svg.axis()
     .scale(y)
+    .tickFormat((d) => {return (d / 1000) + ' km'})
     .orient('left');
 
   var line = d3.svg.line()
