@@ -14,6 +14,8 @@ To generate the data files:
 
     node strava
 
+*Temporarily!* Just for now, you will have to copy activities.json into the public folder.
+
 ## Now run up the server
 
     npm start
