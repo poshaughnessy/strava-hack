@@ -35,3 +35,7 @@ See [node-strava-v3](https://github.com/UnbounDev/node-strava-v3) for more info.
 This will download your activities data into `public/activities.json`. You can also do this independently with:
 
     node strava
+
+You can run the dev server and watch for changes with:
+
+    npm run watch

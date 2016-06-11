@@ -32,3 +32,7 @@ header {
 .tick {
   font-size: 0.8em;
 }
+
+.bar {
+  fill: steelblue;
+}
