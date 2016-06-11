@@ -10,7 +10,7 @@ and graphing them. Strava is great, but it doesn't have an easy way to chart you
 
 Here's the quick design I came up with on the day:
 
-![Design](docs/strava-hack-design.png?raw=true "Design" | width=200) 
+<img src="docs/strava-hack-design.png?raw=true" width="200px" alt="Design"/>
 
 
 ## Getting started
