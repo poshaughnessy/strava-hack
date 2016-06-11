@@ -3,7 +3,7 @@
 const strava = require('strava-v3');
 const jsonfile = require('jsonfile');
 
-const FILE_PATH_ACTIVITIES = 'data/activities.json';
+const FILE_PATH_ACTIVITIES = 'public/activities.json';
 
 /**
  * Athletes.
@@ -15,6 +15,11 @@ const FILE_PATH_ACTIVITIES = 'data/activities.json';
 //});
 
 strava.athlete.listActivities({per_page: 100}, function(err, data) {
+
+  if (err || !data) {
+    console.warn('Error getting Strava data', err, data);
+    return;
+  }
 
   console.log('Number of activities', data.length);
 
