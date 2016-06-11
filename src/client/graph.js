@@ -7,19 +7,22 @@ function parseDate(date) {
   return timeFormat.parse(date);
 }
 
-function totalsData() {
+function generateTotalsData() {
   const data = Object.keys(totalDistanceByMonth).map(function(k) {
-    return {month: k, distance: totalDistanceByMonth[k]};
+    return {
+      month: totalDistanceByMonth[k].month,
+      distance: totalDistanceByMonth[k].distance
+    };
   });
   console.log('totalsData', data);
-  return data;
+  return data.reverse();
 }
 
 export default function(element) {
 
-  var margin = {top: 20, right: 20, bottom: 80, left: 80},
-    width = window.innerWidth - margin.left - margin.right,
-    height = window.innerHeight - margin.top - margin.bottom;
+  var margin = {top: 50, right: 80, bottom: 100, left: 80},
+    width = (window.innerWidth * 0.9) - margin.left - margin.right,
+    height = (window.innerHeight * 0.9) - margin.top - margin.bottom;
 
   var x = d3.time.scale()
     .range([0, width]);
@@ -29,23 +32,15 @@ export default function(element) {
 
   var xAxis = d3.svg.axis()
     .scale(x)
-    .orient('bottom');
+    .orient('bottom')
+    .ticks(d3.time.months)
+    .tickSize(16, 0)
+    .tickFormat(d3.time.format('%B'));
 
   var yAxis = d3.svg.axis()
     .scale(y)
     .tickFormat((d) => {return (d / 1000) + ' km';})
     .orient('left');
-
-  var line = d3.svg.line()
-    .x(function(d) {
-      return x(d.start_date);
-    })
-    .y(function(d) {
-      console.log('l y', d, totalDistanceByMonth[d.month]);
-      return y(totalDistanceByMonth[d.month]);
-    });
-    //.x(function(d) { console.log('l x', d); return x(d.date); })
-    //.y(function(d) { console.log('l y', d); return y(d.value); });
 
   var svg = d3.select(element).append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -61,16 +56,32 @@ export default function(element) {
       d.start_date = parseDate(d.start_date);
       d.month = d3.time.month(d.start_date);
       if (!totalDistanceByMonth[d.month]) {
-        totalDistanceByMonth[d.month] = 0;
+        totalDistanceByMonth[d.month] = {
+          month: d.month,
+          distance: 0
+        };
       }
-      totalDistanceByMonth[d.month] = totalDistanceByMonth[d.month] + d.distance;
-      console.log('month', d.month, d.start_date);
+      totalDistanceByMonth[d.month] = {
+        month: d.month,
+        distance: totalDistanceByMonth[d.month].distance + d.distance
+      };
     });
 
-    console.log('Got here 1', totalDistanceByMonth);
+    const totalsData = generateTotalsData();
 
-    x.domain(d3.extent(data, function(d) { return d.start_date; }));
-    y.domain(d3.extent(data, function(d) { return totalDistanceByMonth[d.month]; }));
+    const firstMonth = new Date(totalsData[0].month);
+    const lastMonth = new Date(totalsData[totalsData.length - 1].month);
+    const lastMonthPlusOne = new Date(lastMonth);
+    lastMonthPlusOne.setMonth(lastMonth.getMonth() + 1);
+
+    let highestMonthTotal = 0;
+
+    totalsData.forEach(data => {
+      highestMonthTotal = Math.max(highestMonthTotal, data.distance);
+    });
+
+    x.domain([firstMonth, lastMonth]);
+    y.domain([0, highestMonthTotal + 1000]);
 
     svg.append('g')
       .attr('class', 'x axis')
@@ -86,30 +97,14 @@ export default function(element) {
       .attr('dy', '.71em')
       .style('text-anchor', 'end');
 
-    svg.append('path')
-      .datum(data)
-      .attr('class', 'line')
-      .attr('d', line);
-
     svg.selectAll(".bar")
-      .data(data)
+      .data(totalsData)
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.start_date); })
-      .attr("width", width / data.length)
-      .attr("y", function(d) { return y(totalDistanceByMonth[d.month]); })
-      .attr("height", function(d) { return height - y(totalDistanceByMonth[d.month]); });
-
-    //svg.selectAll(".bar")
-    //  .data(totalsData())
-    //  .enter().append("rect")
-    //  .attr("class", "bar")
-    //  .attr("x", function(d) { return x(d.month); })
-    //  .attr("width", width / data.length)
-    //  .attr("y", function(d) { return y(d.distance); })
-    //  .attr("height", function(d) { return height - y(d.distance); });
-
-    console.log('Got here 3');
+      .attr("x", function(d) { return x(d.month); })
+      .attr("width", width / (totalsData.length + 1))
+      .attr("y", function(d) { return y(d.distance); })
+      .attr("height", function(d) { return height - y(d.distance); });
 
   });
 
