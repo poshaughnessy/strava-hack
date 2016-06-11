@@ -21,7 +21,7 @@ Here's the quick design I came up with on the day:
 
 ### Add your Strava config
 
-    mkdir config
+    mkdir data
     cp node_modules/strava-v3/strava_config data/
     [Edit strava_config and update the variables appropriately]
 
