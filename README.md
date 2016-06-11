@@ -12,6 +12,9 @@ Here's the quick design I came up with on the day:
 
 <img src="docs/strava-hack-design.png?raw=true" width="400px" alt="Design"/>
 
+Although right now it's very basic and looks like this:
+
+<img src="docs/current.png?raw=true" width="400px" alt="Current"/>
 
 ## Getting started
 
