@@ -16,6 +16,9 @@ Although right now it's very basic and looks like this:
 
 <img src="docs/current.png?raw=true" width="400px" alt="Current"/>
 
+The graph was created with - you guessed it - D3.
+
+
 ## Getting started
 
 ### Install dependencies
